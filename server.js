@@ -19,7 +19,12 @@ app.use(express.json());
 app.use(express.static('public'));
 
 app.get('/', (req,res) => {
-    const filePath = __dirname + '/public/index.html';
+    const filePath = __dirname + '/public/sign-up.html';
+    res.sendFile(filePath);
+})
+
+app.get('/log-in', (req,res) => {
+    const filePath = __dirname + '/public/log-in.html';
     res.sendFile(filePath);
 })
 
