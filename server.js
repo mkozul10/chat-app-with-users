@@ -5,7 +5,7 @@ import { config } from 'dotenv';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { connectDB,connection } from './config/database.js';
-import { User } from './models/users.js';
+import cors from 'cors';
 
 config();
 
@@ -18,6 +18,8 @@ const io = new Server(server);
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.use(express.json());
+app.use(cors());
+app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
 
 app.get('/', async (req,res) => {
@@ -30,19 +32,19 @@ app.get('/log-in', (req,res) => {
     res.sendFile(filePath);
 })
 
+app.post('/sign-up', (req,res) => {
+    console.log(req.body);
+    res.json({bla: true});
+})
 
-io.on('connection', middleware, stream => {
+
+io.on('connection', stream => {
     console.log('Someone connected');
 })
 
 
-function middleware(s) {
-    console.log(s);
-}
-
 connectDB()
     .then(() => {
-        console.log(connection);
         server.listen(process.env.PORT || 3000, () => console.log('Listening for requests on port 3000'));
     })
     .catch(err => console.log('Error on connection',err));
