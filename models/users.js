@@ -18,7 +18,18 @@ const userSchema = new schema({
     salt: {
         type: String,
         required: true
-    }
+    },
+    privateKey: {
+        type: String,
+        required: true
+    },
+    publicKey: {
+        type: String,
+        required: true
+    },
+    chats:[
+        {type: mongoose.Schema.Types.ObjectId, ref: 'Chat'}
+    ]
 })
 
 export const User = mongoose.model('User', userSchema);
