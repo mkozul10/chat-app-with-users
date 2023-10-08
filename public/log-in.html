@@ -13,19 +13,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
     <link rel="stylesheet" href="styles/log-in.css">
+    <script src="js/log-in.js" defer></script>
 </head>
 <body>
     <!--Log in-->
     <div id="log-in-container">
-        <p style=" text-align: center; color:red; margin-top: 0px;" id="error-para"></p>
+        <p style=" text-align: center; color:black; margin-top: 0px;" id="error-success-para"></p>
         <header id="log-in-header">Log in</header>
-        <form>
+        <form id="log-in-form">
             <div id="form-control">
                 <label for="username">Username</label>
                 <input type="username" name="username" id="username" required>
 
-                <label for="password1">Password</label>
-                <input type="password" name="password1" id="password1" required>
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" required>
 
                 <button type="submit" id="log-in-submit">Log in</button>
 
