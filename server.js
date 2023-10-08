@@ -85,7 +85,7 @@ app.post('/sign-up', checkUsername, checkEmail, checkPassword, async (req,res) =
 })
 
 app.post('/log-in', passport.authenticate('local'), (req,res) => {
-    res.json({err: false, msg:'Successfully logged in'});
+    res.json({err: false, msg:'Successfully logged in',username: req.user.username});
 })
 
 
