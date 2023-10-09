@@ -35,8 +35,12 @@ const sendData = async (e) => {
           },
         );
       const resData = await res.json();
-      if(resData) changeDOM(resData);
-      if(resData) form.reset();
+      if(typeof resData.username === 'undefined') window.location.href=`/`;
+      if(resData) {
+        changeDOM(resData);
+        form.reset();
+        window.location.href=`/chat`;
+      }
   } catch(err){
       console.log(err);
   }

@@ -64,6 +64,14 @@ app.get('/log-in', (req,res) => {
     res.sendFile(filePath);
 })
 
+app.get('/chat', (req,res) => {
+    if(req.isAuthenticated()){
+        const filePath = __dirname + '/public/chat.html';
+        res.sendFile(filePath);
+    }
+    else res.redirect('/');
+})
+
 app.post('/sign-up', checkUsername, checkEmail, checkPassword, async (req,res) => {
     const password = generatePassword(req.body.password1);
     const keys = generateKeys();
@@ -85,7 +93,8 @@ app.post('/sign-up', checkUsername, checkEmail, checkPassword, async (req,res) =
 })
 
 app.post('/log-in', passport.authenticate('local'), (req,res) => {
-    res.json({err: false, msg:'Successfully logged in',username: req.user.username});
+    if(req.user) res.json({err: false, msg:'Successfully logged in',username: req.user.username});
+    else res.json({err: false, msg:'Successfully logged in',username: req.user.username});
 })
 
 
