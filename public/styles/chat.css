@@ -60,3 +60,42 @@ body,html{
     align-items: center;
     padding-left: 2px;
 }
+
+#list-of-friends{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: white;
+    height:450px;
+    padding-top: 10px;
+    /*Scrollbar*/
+    overflow-y: auto;
+    scrollbar-width: thin; 
+    scrollbar-color: #ccc #fff;
+    /*Scrollbar end*/
+}
+
+.friend-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width:90%;
+    height: 50px;
+    border: 1px solid red;
+    border-radius: 20px;
+    padding-left: 10px;
+    margin-top: 10px;
+}
+
+/*Scrollbar*/
+#list-of-friends::-webkit-scrollbar {
+    width: 10px;
+}
+#list-of-friends::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 5px;
+}
+#list-of-friends::-webkit-scrollbar-thumb:hover {
+    background-color: #999;
+}
+/*Scrollbar end*/
