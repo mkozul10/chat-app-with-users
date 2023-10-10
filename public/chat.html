@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
     <link rel="stylesheet" href="styles/chat.css">
+    <script src="/socket.io/socket.io.js" defer></script>
+    <script src="js/chat.js" defer></script>
 </head>
 <body>
     <div id="container">
         <div id="column-1">
             <div id="log-and-find">
                 <div id="log-out">
-                    <a href="#" >Log out</a>
+                    <a href="/" id="log-out">Log out</a>
                 </div>
                 <div id="find-new-friend">
                     <form id="find-new-friend-form">
