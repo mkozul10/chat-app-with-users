@@ -97,9 +97,21 @@ app.post('/log-in', passport.authenticate('local'), (req,res) => {
     else res.json({err: false, msg:'Successfully logged in',username: req.user.username});
 })
 
+app.get('/log-out', (req,res) => {
+    if(req.isAuthenticated()){
+        req.logout(err => {
+            if(err) console.log(err);
+        });
+        res.json({redirect:'/'});
+    }
+    else res.redirect('/');
+})
 
-io.on('connection', stream => {
-    console.log('Someone connected');
+
+io.on('connection', socket => {
+    socket.on("hello", ({user}) => {
+        console.log(user);
+    })
 })
 
 
