@@ -11,6 +11,8 @@ import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import session from 'express-session';
 import routes from './routes/sign-log-in-route.js';
+import passportSocketio from 'passport.socketio';
+import cookieParser from 'cookie-parser';
 
 config();
 
@@ -26,6 +28,7 @@ app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
+app.use(cookieParser());
 
 //session setup
 const mongoStore = MongoStore.create({
@@ -34,7 +37,7 @@ const mongoStore = MongoStore.create({
     mongooseConnection: connection
 })
 
-app.use(session({
+const sessionMiddleware = session({
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
@@ -42,7 +45,9 @@ app.use(session({
     cookie: {
         maxAge: 1000 * 60 * 60 * 24
     }
-}))
+})
+
+app.use(sessionMiddleware);
 
 //END session setup
 
@@ -54,11 +59,30 @@ app.use(passport.session())
 
 app.use(routes);
 
+// io session setup
+
+const onAuthorizeSuccess = (data, accept) => {
+    accept();
+}
+
+const onAuthorizeFail = (data, message, error, accept) => {
+    if (error) throw new Error(message);
+    console.log('Failed connection to socket.io:', message);
+    accept(new Error(message));
+}
+  
+io.use(passportSocketio.authorize({
+    key:'connect.sid',
+    secret: process.env.SECRET,
+    store: mongoStore,
+    success: onAuthorizeSuccess,
+    fail: onAuthorizeFail
+}))
+//END io session setup
+
 
 io.on('connection', socket => {
-    socket.on("hello", ({user}) => {
-        console.log(user);
-    })
+    console.log(socket.request.user);
 })
 
 
