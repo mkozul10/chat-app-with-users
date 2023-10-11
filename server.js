@@ -6,13 +6,11 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { connectDB,connection } from './config/database.js';
 import cors from 'cors';
-import { checkEmail, checkUsername, checkPassword } from './middleware/serverMiddleware.js';
 import { User } from './models/users.js';
-import { generatePassword } from './lib/passwordUtils.js';
-import { generateKeys } from './lib/keys.js';
 import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import session from 'express-session';
+import routes from './routes/sign-log-in-route.js';
 
 config();
 
@@ -22,7 +20,7 @@ const io = new Server(server);
 
 
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+export const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.use(express.json());
 app.use(cors());
@@ -54,58 +52,7 @@ app.use(passport.initialize());
 app.use(passport.session())
 //END passport auth
 
-app.get('/', async (req,res) => {
-    const filePath = __dirname + '/public/sign-up.html';
-    res.sendFile(filePath);
-})
-
-app.get('/log-in', (req,res) => {
-    const filePath = __dirname + '/public/log-in.html';
-    res.sendFile(filePath);
-})
-
-app.get('/chat', (req,res) => {
-    if(req.isAuthenticated()){
-        const filePath = __dirname + '/public/chat.html';
-        res.sendFile(filePath);
-    }
-    else res.redirect('/');
-})
-
-app.post('/sign-up', checkUsername, checkEmail, checkPassword, async (req,res) => {
-    const password = generatePassword(req.body.password1);
-    const keys = generateKeys();
-    try{
-        const newUser = new User({
-            email: req.body.email,
-            username: req.body.username,
-            hash: password.hash,
-            salt: password.salt,
-            privateKey: keys.privateKey,
-            publicKey: keys.publicKey
-        })
-        const created = await newUser.save();
-        res.json({err: false, msg:'User successfully created'});
-        
-    } catch(err){
-        console.log(err);
-    }
-})
-
-app.post('/log-in', passport.authenticate('local'), (req,res) => {
-    if(req.user) res.json({err: false, msg:'Successfully logged in',username: req.user.username});
-    else res.json({err: false, msg:'Successfully logged in',username: req.user.username});
-})
-
-app.get('/log-out', (req,res) => {
-    if(req.isAuthenticated()){
-        req.logout(err => {
-            if(err) console.log(err);
-        });
-        res.json({redirect:'/'});
-    }
-    else res.redirect('/');
-})
+app.use(routes);
 
 
 io.on('connection', socket => {
