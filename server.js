@@ -20,15 +20,15 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server);
 
-
-
 export const __dirname = dirname(fileURLToPath(import.meta.url));
 
+//middleware
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
 app.use(cookieParser());
+//END middleware
 
 //session setup
 const mongoStore = MongoStore.create({
@@ -60,7 +60,6 @@ app.use(passport.session())
 app.use(routes);
 
 // io session setup
-
 const onAuthorizeSuccess = (data, accept) => {
     accept();
 }
@@ -80,10 +79,11 @@ io.use(passportSocketio.authorize({
 }))
 //END io session setup
 
-
+//socket implementation
 io.on('connection', socket => {
     console.log(socket.request.user);
 })
+//END socket implementation
 
 
 connectDB()
